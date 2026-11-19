@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en" style="--wh-aurora-intensity: 0.7; --wh-aurora-image-intensity: 0.2; --wh-font-size-factor: 1;"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quiz Card | Destination B1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&amp;family=Montserrat:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0a0a0c;
+            --gold-primary: #ffd700;
+            --gold-accent: #ffaa00;
+            --gold-glow: rgba(255, 215, 0, 0.45);
+            --card-glass: rgba(255, 255, 255, 0.06);
+            --card-border: rgba(255, 215, 0, 0.4);
+            --text-color: #ffffff;
+            --sub-text: #c8c8d8;
+            --btn-glass: rgba(255, 215, 0, 0.12);
+            --nav-bg: rgba(0, 0, 0, 0.45);
+            --shadow-color: rgba(0, 0, 0, 0.6);
+            --orb-opacity: 0.55;
+        }
+
+        body.light-mode {
+            --bg-main: #f3f4f8;
+            --gold-primary: #d98a00;
+            --gold-accent: #b87300;
+            --gold-glow: rgba(217, 138, 0, 0.25);
+            --card-glass: rgba(255, 255, 255, 0.88);
+            --card-border: rgba(217, 138, 0, 0.45);
+            --text-color: #16161e;
+            --sub-text: #525266;
+            --btn-glass: rgba(217, 138, 0, 0.12);
+            --nav-bg: rgba(255, 255, 255, 0.85);
+            --shadow-color: rgba(0, 0, 0, 0.12);
+            --orb-opacity: 0.25;
+        }
+
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background-color: var(--bg-main); 
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            overflow: hidden; touch-action: none; transition: background-color 0.35s ease, color 0.35s ease;
+            color: var(--text-color);
+        }
+
+        .orb-bg { position: absolute; width: 100%; height: 100%; overflow: hidden; z-index: 0; pointer-events: none; }
+        .orb {
+            position: absolute; border-radius: 50%; filter: blur(75px); opacity: var(--orb-opacity);
+            animation: floatOrb 12s infinite alternate ease-in-out; transition: opacity 0.4s ease;
+        }
+        .orb-1 { width: 220px; height: 220px; background: #ffd700; top: 15%; left: -10%; }
+        .orb-2 { width: 260px; height: 260px; background: #ffaa00; bottom: 15%; right: -10%; animation-delay: -5s; }
+        .orb-3 { width: 180px; height: 180px; background: #ff8800; top: 45%; left: 30%; animation-delay: -8s; }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 40px) scale(1.15); }
+        }
+
+        .app-container {
+            position: relative; z-index: 1;
+            width: 100%; height: 100dvh; display: flex; flex-direction: column;
+            padding: 12px; box-sizing: border-box; justify-content: space-between;
+        }
+
+        /* --- PAGE 1: MENU (DASHBOARD) --- */
+        .page { display: none; width: 100%; height: 100%; flex-direction: column; justify-content: space-between; }
+        .page.active { display: flex; }
+
+        .menu-header { display: flex; flex-direction: column; align-items: center; gap: 6px; position: relative; padding-top: 4px; }
+        .theme-toggle { 
+            position: absolute; right: 4px; top: 0; font-size: 10.5px; cursor: pointer; z-index: 10; 
+            background: var(--btn-glass); color: var(--text-color); padding: 5px 11px; border-radius: 20px; 
+            border: 1px solid var(--card-border); backdrop-filter: blur(10px); font-weight: 700;
+            user-select: none;
+        }
+
+        .title-area h1 { 
+            font-family: 'Cinzel', Georgia, serif; font-weight: 700; color: var(--text-color); 
+            margin: 0; font-size: 24px; letter-spacing: 2px; text-shadow: 0 0 15px var(--gold-glow);
+        }
+        .title-area h1 span { color: var(--gold-primary); }
+        .subtitle { font-size: 11px; color: var(--sub-text); margin: 0; font-weight: 600; }
+
+        .menu-list { 
+            display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 420px; 
+            margin: auto; overflow-y: auto; padding: 6px 2px; max-height: calc(100dvh - 165px);
+        }
+
+        .menu-card {
+            background: var(--card-glass); border: 1.5px solid var(--card-border);
+            border-radius: 20px; padding: 14px 16px; display: flex; align-items: center; 
+            justify-content: space-between; backdrop-filter: blur(20px); cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease; box-shadow: 0 8px 24px var(--shadow-color);
+        }
+        .menu-card:hover { border-color: var(--gold-primary); transform: translateY(-2px); }
+        .menu-card:active { transform: scale(0.98); }
+        
+        .menu-info h3 { margin: 0 0 4px 0; font-size: 14px; color: var(--text-color); font-weight: 700; }
+        .menu-info p { margin: 0; font-size: 11px; color: var(--sub-text); }
+        
+        .menu-actions { display: flex; align-items: center; gap: 8px; }
+        .count-badge { background: var(--btn-glass); border: 1px solid var(--card-border); color: var(--gold-primary); padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+        .import-mini-btn { background: var(--gold-primary); color: #000; border: none; padding: 6px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .import-mini-btn:hover { transform: scale(1.08); }
+
+        .global-actions { display: flex; gap: 8px; width: 100%; max-width: 420px; margin: 0 auto; }
+        .global-btn { flex: 1; padding: 12px; border-radius: 20px; font-weight: 800; font-size: 11px; border: 1px solid var(--card-border); cursor: pointer; background: var(--btn-glass); color: var(--text-color); backdrop-filter: blur(10px); transition: 0.2s; }
+        .global-btn:active { transform: scale(0.97); }
+        .global-btn.download { flex: 2; background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; border: none; box-shadow: 0 4px 15px var(--gold-glow); }
+        .global-btn.clear { color: #ff5c5c; border-color: rgba(255, 92, 92, 0.4); background: rgba(255, 92, 92, 0.08); }
+
+
+        /* --- PAGE 2: ACTIVE MODE (CARDS) --- */
+        .game-header { display: flex; flex-direction: column; align-items: center; gap: 6px; position: relative; }
+        
+        .nav-top-bar { display: flex; width: 100%; max-width: 420px; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+        .back-menu-btn { background: var(--btn-glass); border: 1px solid var(--card-border); color: var(--gold-primary); padding: 5px 12px; border-radius: 15px; font-size: 10px; font-weight: 800; cursor: pointer; backdrop-filter: blur(10px); }
+
+        .sub-controls { display: flex; gap: 6px; justify-content: center; align-items: center; flex-wrap: wrap; }
+        .dir-btn, .order-btn {
+            background: var(--nav-bg); border: 1px solid var(--card-border); color: var(--text-color);
+            padding: 5px 12px; font-size: 10px; font-weight: 700; border-radius: 14px; cursor: pointer; transition: 0.2s;
+        }
+        .dir-btn.active { background: var(--gold-primary); color: #000; border-color: var(--gold-primary); }
+        .order-btn.active { background: var(--text-color); color: var(--bg-main); border-color: var(--text-color); }
+
+        .stats-bar { 
+            display: flex; justify-content: space-between; width: 100%; max-width: 400px; 
+            margin: 2px auto 0; font-family: 'Cinzel', Georgia, serif; font-weight: 700; font-size: 10.5px; 
+            color: var(--gold-primary);
+        }
+
+        .progress-track {
+            width: 100%; max-width: 400px; height: 4px; background: var(--btn-glass);
+            border-radius: 4px; margin: 3px auto; overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold-primary), var(--gold-accent));
+            transition: width 0.3s ease; border-radius: 4px;
+        }
+
+        .card-container { flex-grow: 1; width: 100%; max-width: 420px; min-height: 250px; margin: 4px auto; perspective: 1200px; cursor: pointer; }
+        
+        .card-inner { 
+            position: relative; width: 100%; height: 100%; 
+            transform-style: preserve-3d; 
+            transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.25s ease; 
+            transform: translateX(0);
+        }
+        .flipped .card-inner { transform: rotateY(180deg) translateX(0) !important; }
+
+        .card-front, .card-back {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 30px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 20px; box-sizing: border-box; text-align: center;
+            background: var(--card-glass);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1.5px solid var(--card-border);
+            box-shadow: 0 16px 36px var(--shadow-color), inset 0 0 15px rgba(255, 215, 0, 0.1);
+            user-select: none; overflow-y: auto;
+        }
+        .card-back { transform: rotateY(180deg); border-color: var(--gold-primary); }
+
+        .word-main { 
+            font-size: 25px; font-weight: 800; color: var(--text-color); margin-bottom: 6px; 
+            text-shadow: 0 0 12px var(--gold-glow); line-height: 1.25;
+        }
+        
+        .result-text { 
+            font-size: 19px; font-weight: 700; color: var(--text-color); white-space: pre-wrap; 
+            line-height: 1.35;
+        }
+
+        .transcription { font-size: 13px; color: var(--sub-text); min-height: 16px; font-style: italic; font-weight: 500; }
+        
+        .example-box { 
+            margin-top: 12px; width: 100%; text-align: center;
+            background: var(--btn-glass); border: 1px solid var(--card-border);
+            padding: 10px 12px; border-radius: 16px; box-sizing: border-box;
+            white-space: pre-wrap; font-size: 12px; line-height: 1.4;
+        }
+        .example-en { color: var(--gold-primary); font-style: italic; font-weight: 700; margin-bottom: 4px; }
+        .example-uz { color: var(--sub-text); font-style: normal; font-size: 11px; }
+
+        .speaker-btn { font-size: 26px; margin-bottom: 8px; cursor: pointer; visibility: hidden; color: var(--gold-primary); filter: drop-shadow(0 0 6px var(--gold-glow)); transition: transform 0.2s; padding: 4px; }
+        .speaker-btn:hover { transform: scale(1.15); }
+        .speaker-btn:active { transform: scale(0.9); }
+        .show-element { visibility: visible !important; }
+
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; max-width: 400px; margin: 0 auto; }
+        .btn { 
+            padding: 12px; font-family: inherit; font-size: 11px; font-weight: 800; 
+            border: none; border-radius: 22px; cursor: pointer; transition: 0.2s; letter-spacing: 0.6px;
+        }
+        .btn:active { transform: scale(0.95); }
+        
+        .btn-nav { 
+            grid-column: 1; background: var(--nav-bg); border: 1px solid var(--card-border); 
+            color: var(--text-color); backdrop-filter: blur(10px);
+        }
+        .btn-next { 
+            grid-column: 2; background: linear-gradient(135deg, #ffd700, #ffaa00); 
+            color: #000; box-shadow: 0 4px 15px var(--gold-glow);
+        }
+        .btn-basket-add { 
+            grid-column: span 2; background: var(--btn-glass); border: 1.5px solid var(--gold-primary); 
+            color: var(--gold-primary); font-weight: 800; border-radius: 22px; backdrop-filter: blur(10px);
+        }
+        .btn-basket-add:hover { background: var(--gold-primary); color: #000; }
+        .btn-basket-add.remove-mode { border-color: #2ecc71; color: #2ecc71; background: rgba(46, 204, 113, 0.1); }
+        .btn-basket-add.remove-mode:hover { background: #2ecc71; color: #000; }
+
+        .basket-trigger { 
+            display: flex; align-items: center; gap: 8px; background: var(--card-glass); 
+            padding: 6px 16px; border-radius: 22px; border: 1.5px solid var(--card-border); align-self: center; margin-top: 2px; cursor: pointer; backdrop-filter: blur(10px);
+            transition: 0.2s;
+        }
+        .basket-trigger:active { transform: scale(0.96); }
+        .badge { background: var(--gold-primary); color: #000; font-weight: 800; border-radius: 50%; padding: 2px 7px; font-size: 10px; }
+
+        .hint-footer { font-size: 9.5px; color: var(--sub-text); text-align: center; opacity: 0.75; margin-top: 2px; }
+        @media (max-width: 600px) { .hint-footer { display: none; } }
+    </style>
+<style id="highlight-mengshou-style">
+    .highlight-mengshou-wrap {
+        background: #ff9;
+        cursor: pointer;
+    }
+    .highlight-mengshou-wrap.active {
+        background: #ffb;
+    }
+</style></head>
+<body>
+
+<div class="orb-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+</div>
+
+<div class="app-container">
+    
+    <!-- ================= PAGE 1: MENU ================= -->
+    <div id="pageMenu" class="page active">
+        <div class="menu-header">
+            <div class="theme-toggle" id="themeBtn1" onclick="toggleTheme()">☀️ LIGHT</div>
+            <div class="title-area"><h1>QUIZ <span>CARD</span></h1></div>
+            <p class="subtitle">Destination B1 • 5-Category Learning System</p>
+        </div>
+
+        <div class="menu-list">
+            <!-- 1. Topic Vocabularies -->
+            <div class="menu-card" onclick="openCategory('topic')">
+                <div class="menu-info">
+                    <h3>1. Topic Vocabularies</h3>
+                    <p>Unit words &amp; expressions</p>
+                </div>
+                <div class="menu-actions">
+                    <span class="count-badge" id="m-cnt-topic">36 items</span>
+                    
+                </div>
+            </div>
+
+            <!-- 2. Phrasal Verbs -->
+            <div class="menu-card" onclick="openCategory('phrasal')">
+                <div class="menu-info">
+                    <h3>2. Phrasal Verbs</h3>
+                    <p>Action verbs with particles</p>
+                </div>
+                <div class="menu-actions">
+                    <span class="count-badge" id="m-cnt-phrasal">8 items</span>
+                    
+                </div>
+            </div>
+
+            <!-- 3. Prepositional Phrases -->
+            <div class="menu-card" onclick="openCategory('prepositional')">
+                <div class="menu-info">
+                    <h3>3. Prepositional Phrases</h3>
+                    <p>Time &amp; place expressions</p>
+                </div>
+                <div class="menu-actions">
+                    <span class="count-badge" id="m-cnt-prepositional">6 items</span>
+                    
+                </div>
+            </div>
+
+            <!-- 4. Word Formation -->
+            <div class="menu-card" onclick="openCategory('formation')">
+                <div class="menu-info">
+                    <h3>4. Word Formation</h3>
+                    <p>Nouns, verbs, adjectives family</p>
+                </div>
+                <div class="menu-actions">
+                    <span class="count-badge" id="m-cnt-formation">34 items</span>
+                    
+                </div>
+            </div>
+
+            <!-- 5. Word Patterns -->
+            <div class="menu-card" onclick="openCategory('patterns')">
+                <div class="menu-info">
+                    <h3>5. Word Patterns</h3>
+                    <p>Collocations &amp; prepositions</p>
+                </div>
+                <div class="menu-actions">
+                    <span class="count-badge" id="m-cnt-patterns">12 items</span>
+                    
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+
+
+    <!-- ================= PAGE 2: ACTIVE GAME ZONE ================= -->
+    <div id="pageGame" class="page">
+        <div class="game-header">
+            <div class="nav-top-bar">
+                <button class="back-menu-btn" onclick="goToMenu()">« 🏠 MENU</button>
+                <div class="theme-toggle" id="themeBtn2" style="position:static;" onclick="toggleTheme()">☀️ LIGHT</div>
+            </div>
+
+            <div class="sub-controls">
+                <button class="dir-btn active" onclick="setDirection('eng-uz', this)">ENG-UZ</button>
+                <button class="dir-btn" onclick="setDirection('uz-eng', this)">UZ-ENG</button>
+                <button id="orderLinear" class="order-btn active" onclick="setOrder('linear')">LINEAR</button>
+                <button id="orderShuffle" class="order-btn" onclick="setOrder('shuffle')">SHUFFLE</button>
+            </div>
+        </div>
+
+        <div>
+            <div class="stats-bar">
+                <div id="progress">0 / 0</div>
+                <div id="statusLabel">CATEGORY</div>
+                <div>SESSION: <span id="timer">00:34</span></div>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="card-container" id="cardContainer">
+            <div class="card-inner" id="swipeCard">
+                <div class="card-front">
+                    <div id="fSpeaker" class="speaker-btn" onclick="event.stopPropagation(); speak();">🔊</div>
+                    <div id="fText" class="word-main">NO WORDS</div>
+                    <div id="fTrans" class="transcription">Please import CSV for this category</div>
+                </div>
+                <div class="card-back">
+                    <div id="bSpeaker" class="speaker-btn" onclick="event.stopPropagation(); speak();">🔊</div>
+                    <div id="bText" class="result-text">EMPTY</div>
+                    <div id="bTrans" class="transcription"></div>
+                    <div id="bEx" class="example-box" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-nav" onclick="manualMove('prev')">« BACK</button>
+            <button class="btn btn-next" onclick="manualMove('next')">NEXT »</button>
+            <button class="btn btn-basket-add" id="addBtn" onclick="handleBasketAction()">+ ADD TO BASKET</button>
+        </div>
+
+        <div class="basket-trigger" onclick="toggleBasketMode()">
+            <span style="font-size: 14px;">🧺</span>
+            <span id="basketLabel" style="color: var(--text-color); font-weight: 800; font-size: 10px;">BASKET MODE</span>
+            <span class="badge" id="basketCount">0</span>
+        </div>
+        <div class="hint-footer">Shortcuts: [Space] Flip • [← / →] Prev/Next • [S] Audio • [B] Basket</div>
+    </div>
+
+</div>
+
+<!-- Hidden File Input for dynamic category CSV importing -->
+
+
+<script id="vocabData">
+    let vocabStore = {
+    "topic": [
+        {
+            "e": "Beat",
+            "u": "yutmoq, mag'lub qilmoq",
+            "t": "",
+            "ex": "England needed to beat Germany to get to the final.\n(Angliya finalga chiqish uchun Germaniyani mag'lub etishi kerak edi.)"
+        },
+        {
+            "e": "Board game",
+            "u": "taxtachada o'ynaladigan o'yinlar, eg. manapoly; chess; backgammon",
+            "t": "",
+            "ex": "I think that Trivial Pursuit is my favourite board game.\n(Menimcha, Trivial Pursuit mening eng sevimli stol o'yinim.)"
+        },
+        {
+            "e": "Captain",
+            "u": "sardor, kapitan",
+            "t": "",
+            "ex": "She was captain of the Olympic swimming team.\n(U Olimpiada suzish guruhining sardori edi.)"
+        },
+        {
+            "e": "Challenge",
+            "u": "musobaqaga yoki urushga chorlamoq, da'vat etmoq",
+            "t": "",
+            "ex": "The girls challenged the boys to a cricket match.\n(Qizlar yigitlarni krikket o'ynashga da'vat etishdi.)"
+        },
+        {
+            "e": "Challenge",
+            "u": "sinov, mushkul ish",
+            "t": "",
+            "ex": "I felt I needed a new challenge at work.\n(Men ish joyimda o'zim uchun yangi sinov kerakligini his qildim.)"
+        },
+        {
+            "e": "Champion",
+            "u": "chempion",
+            "t": "",
+            "ex": "He finally became the world heavyweight boxing champion.\n(U vanixoyat og'ir vazn toifasida dunyo chempioni bo'ldi.)"
+        },
+        {
+            "e": "Cheat",
+            "u": "g'irromlik qilmoq",
+            "t": "",
+            "ex": "Kids have always found ways of cheating in school exams.\n(Bolalar har doim maktab imtihonlarida aldash (shpargalkalar ishlatish, do'stdan yordam olish...) usullarini topganlar.)"
+        },
+        {
+            "e": "Classical music",
+            "u": "mumtoz musiqa: pianino va skripkada ijro etiladigan musiqa",
+            "t": "",
+            "ex": "I love classical music, like Beethoven.\n(Menga mumtoz musiqa yoqadi, masalan Bethoven.)"
+        },
+        {
+            "e": "Club",
+            "u": "klub, to'garak",
+            "t": "",
+            "ex": "Why don't you join a chess club?\n(1) Shaxmat klubiga qo'shilishingiz kerak (shuni maslahat beraman); 2) Nega shaxmat klubiga qo'shilmaysiz?)"
+        },
+        {
+            "e": "Coach",
+            "u": "murabbiy",
+            "t": "",
+            "ex": "After playing for ten years, Barry became a baseball coach.\n(10 yil (beysbol) o'ynagandan keyin, Barri beysbol murabbiyi bo'ldi.)"
+        },
+        {
+            "e": "Competition",
+            "u": "musobaqa",
+            "t": "",
+            "ex": "He'd entered a competition in the local newspaper.\n(U mahalliy nashriyotdagi musobaqaga qo'shildi.)"
+        },
+        {
+            "e": "Concert",
+            "u": "konsert",
+            "t": "",
+            "ex": "Did you hear that the Rolling Stones did a concert in China?\n(Rolling Stones guruhi Xitoyda konsert berganini eshitdingizmi?)"
+        },
+        {
+            "e": "Defeat",
+            "u": "g'alaba qozonmoq, mag'lub qilmoq",
+            "t": "",
+            "ex": "France defeated Italy 3-1.\n(Fransiya Italiyani 3-1 hisobda mag'lubiyatga uchratdi.)"
+        },
+        {
+            "e": "Defeat",
+            "u": "mag'lubiyat",
+            "t": "",
+            "ex": "England suffered a 2-0 defeat.\n(Angliya 2-0 hisobida mag'lub bo'ldi.)"
+        },
+        {
+            "e": "Entertaining",
+            "u": "qiziqarli, maroqli",
+            "t": "",
+            "ex": "I saw a really entertaining programme on TV last night.\n(Men kecha tunda televizorda juda qiziqarli bir dastur ko'rdim.)"
+        },
+        {
+            "e": "Folk music",
+            "u": "milliy musiqa",
+            "t": "",
+            "ex": "What I like about folk music is the sound of the guitar.\n(Milliy musiqaning menga yoqadigan jihati bu gitara sadosi.)"
+        },
+        {
+            "e": "Group",
+            "u": "(musiqiy) guruh",
+            "t": "",
+            "ex": "My brother has got his own group and they play in our local area.\n(Akam o'z guruhiga ega va ular bizning mahalliy hududda ijro etishadi.)"
+        },
+        {
+            "e": "Gym",
+            "u": "workout zali, gimnastika zali",
+            "t": "",
+            "ex": "I'm thinking of joining a gym.\n(Men sport zaliga qo'shilish haqida o'ylayapman.)"
+        },
+        {
+            "e": "Have fun",
+            "u": "ko'ngil yozmoq, xursandchilik qilmoq",
+            "t": "",
+            "ex": "We haven't had such fun for years.\n(Ancha yildan beri, bunchalik xursandchilik qilmagandik.)"
+        },
+        {
+            "e": "Interest",
+            "u": "qiziqtirmoq",
+            "t": "",
+            "ex": "Photography has always interested me.\n(Fotograflik meni doim qiziqtirib kelgan.)"
+        },
+        {
+            "e": "Interest",
+            "u": "qiziqish, hobbi",
+            "t": "",
+            "ex": "Tell us about your interests and hobbies.\n(Qiziqishlaringiz va sevimli mashg'ulotlaringiz haqida bizga aytib bering.)"
+        },
+        {
+            "e": "Member",
+            "u": "a'zo",
+            "t": "",
+            "ex": "Are you a member of the golf club?\n(Siz golf klubi a'zosimisiz?)"
+        },
+        {
+            "e": "Opponent",
+            "u": "raqib",
+            "t": "",
+            "ex": "His opponent received only 36 per cent of the vote.\n(Uning raqibi ovozlarning bor yo'g'i 36 foizini oldi.)"
+        },
+        {
+            "e": "Organise",
+            "u": "tashkillashtirmoq",
+            "t": "",
+            "ex": "Who's organising the conference?\n(Konferensiyani kim tashkillashtiryapti?)"
+        },
+        {
+            "e": "Pleasure",
+            "u": "mamnuniyat, lazzat, xursandchilik",
+            "t": "",
+            "ex": "Rick smiled with pleasure when Michonne walked in.\n(Mishon kirib kelganida, Rik mamnuniyat bilan jilmaydi.)"
+        },
+        {
+            "e": "Referee",
+            "u": "hakam",
+            "t": "",
+            "ex": "The referee blew his whistle and the game began.\n(Hakam hushtagini chaldi va o'yin boshlandi.)"
+        },
+        {
+            "e": "Rhythm",
+            "u": "ritm",
+            "t": "",
+            "ex": "This song has got a really great rhythm.\n(Bu qo'shiq judayam ajoyib ritmga ega.)"
+        },
+        {
+            "e": "Risk",
+            "u": "tavakkal qilib xavfga qo'ymoq",
+            "t": "",
+            "ex": "He risked a lot of money on the company.\n(U kompaniya uchun katta pul tikdi.)"
+        },
+        {
+            "e": "Risk",
+            "u": "tavakkal, xavf",
+            "t": "",
+            "ex": "There's a serious risk of an accident on the road.\n(Ushbu mashina yo'lida jiddiy avariya bo'lish xavfi mavjud.)"
+        },
+        {
+            "e": "Score",
+            "u": "hisob qayd etmoq, natija ko'rsatmoq",
+            "t": "",
+            "ex": "No one scored in the first half.\n(O'yinning birinchi yarmida hech kim go'l urmadi.)"
+        },
+        {
+            "e": "Score",
+            "u": "ball, natija, hisob",
+            "t": "",
+            "ex": "The final score was 4-3 to United.\n(Yakuniy hisob Yunayted foydasiga 4-3 bo'ldi.)"
+        },
+        {
+            "e": "Support",
+            "u": "qo'llab-quvvatlamoq, yoqlamoq",
+            "t": "",
+            "ex": "I support West Ham–who do you support? / I hope all the students will support our plans to rebuild the school.\n(Men Vest Hem jamoasini qo'llab-quvvatlayman–siz kimni qo'llab-quvvatlaysiz (baletlik qilasiz)? / Umid qilamanki, barcha o'quvchilar maktabni qayta qurish to'g'risidagi rejalarimizni qo'llab-quvvatlashadi.)"
+        },
+        {
+            "e": "Support",
+            "u": "yordam, madad",
+            "t": "",
+            "ex": "Her family and friends have given her lots of support.\n(Uning oilasi va do'stlari unga juda ko'p madad berishgan.)"
+        },
+        {
+            "e": "Team",
+            "u": "jamoa",
+            "t": "",
+            "ex": "Are you in the hockey team this year?\n(Siz bu yil hokkey guruhidamisiz?)"
+        },
+        {
+            "e": "Train",
+            "u": "mashq qilmoq, shug'ullanmoq",
+            "t": "",
+            "ex": "The players train five days a week.\n(O'yinchilar haftada 5 kun shug'ullanishadi.)"
+        },
+        {
+            "e": "Video game",
+            "u": "video o'yinlar",
+            "t": "",
+            "ex": "I don't like video games–I'd rather play outside.\n(Menga video o'yinlar yoqmaydi–ko'chada o'ynashni afzal ko'raman.)"
+        }
+    ],
+    "phrasal": [
+        {
+            "e": "Carry on",
+            "u": "davom ettirmoq",
+            "t": "",
+            "ex": "The phone rang, but Mark just carried on watching TV.\n(Qo'ng'iroq jiringladi, ammo Mark televizor ko'rishda davom etdi.)"
+        },
+        {
+            "e": "Eat out",
+            "u": "restoranda ovqatlanmoq",
+            "t": "",
+            "ex": "Would you like to stay in or eat out tonight?\n(Bugun oqshom uyda qolishni istaysizmi yoki restoranda ovqatlanishnimi?)"
+        },
+        {
+            "e": "Give up",
+            "u": "odatni tashlamoq",
+            "t": "",
+            "ex": "You should give up smoking.\n(Chekishni tashlashingiz kerak.)"
+        },
+        {
+            "e": "Join in",
+            "u": "ishtirok etmoq",
+            "t": "",
+            "ex": "Ask them if you can play–I'm sure they'll let you join in.\n(Ulardan o'ynashingiz mumkinmi yoki yo'qligini so'rang–ishonchim komil ular ishtirok etishingizga ruxsat berishadi.)"
+        },
+        {
+            "e": "Send off",
+            "u": "o'yindan chetlashtirmoq",
+            "t": "",
+            "ex": "It was a very bad foul and the referee sent the player off.\n(U juda yomon qoidabuzarlik bo'ldi va hakam o'yinchini o'yindan chetlatdi.)"
+        },
+        {
+            "e": "Take up",
+            "u": "odatni boshlamoq",
+            "t": "",
+            "ex": "I've taken up stamp collecting and it's really interesting.\n(Men pochta markalarini yig'ishni boshladim va bu juda qiziq.)"
+        },
+        {
+            "e": "Turn down",
+            "u": "ovozni pasaytirmoq",
+            "t": "",
+            "ex": "Turn the radio down–I'm trying to work.\n(Radioni ovozini pasaytiring–men ishlashga urinyapman.)"
+        },
+        {
+            "e": "Turn up",
+            "u": "ovozni balandlatmoq",
+            "t": "",
+            "ex": "We asked our teacher to turn the CD up, so that we could hear it.\n(Biz o'qituvchimizdan CD diskni ovozini ko'tarishni so'radik, uni eshita olishimiz uchun.)"
+        }
+    ],
+    "prepositional": [
+        {
+            "e": "For a long time",
+            "u": "ancha vaqtdan beri",
+            "t": "",
+            "ex": "I haven't seen George for a long time.\n(Jorjni ancha vaqtdan beri ko'rmadim.)"
+        },
+        {
+            "e": "For fun",
+            "u": "xursandchilik uchun",
+            "t": "",
+            "ex": "I sing in a band for fun.\n(Men xursandchilik uchun musiqiy guruhda kuylayman.)"
+        },
+        {
+            "e": "In the middle (of)",
+            "u": "(ning) o'rtasida",
+            "t": "",
+            "ex": "In the middle of the stage, there was an elephant.\n(Sahnaning o'rtasida fil bor edi.)"
+        },
+        {
+            "e": "In time (for)",
+            "u": "(ga) o'z vaqtida",
+            "t": "",
+            "ex": "We arrived at the cinema just in time for the start of the film.\n(Biz kinoteatrga film boshlanishiga shundoqqina o'z vaqtida yetib keldik.)"
+        },
+        {
+            "e": "On CD/DVD/video",
+            "u": "diskda/ DVDda/videoda",
+            "t": "",
+            "ex": "I didn't see it at the cinema, so I'm watching it on DVD tonight.\n(Uni kinoteatrda ko'rmadim, shuning uchun bugun kechqurun DVDda ko'raman.)"
+        },
+        {
+            "e": "On stage",
+            "u": "sahnada",
+            "t": "",
+            "ex": "There were three actors on stage.\n(Sahnada 3 nafar aktyor bor edi.)"
+        }
+    ],
+    "formation": [
+        {
+            "e": "Act",
+            "u": "harakat qilmoq",
+            "t": "",
+            "ex": "By acting quickly doctors saved her life.\n(Tezlik bilan harakat qilish orqali, shifokorlar uning hayotini saqlab qolishdi.)"
+        },
+        {
+            "e": "Action",
+            "u": "harakat",
+            "t": "",
+            "ex": "They say that actions speak louder than words.\n(Insonning gapirgan so'zlaridan qilgan amali muhim (maqol).)"
+        },
+        {
+            "e": "Active",
+            "u": "serharakat",
+            "t": "",
+            "ex": "Johnnie is six years old, so he's very active and has a lot of energy.\n(Jo'ni 6 yoshda, shuning uchun u juda serharakat va ko'p energiyaga ega.)"
+        },
+        {
+            "e": "Actor",
+            "u": "aktyor",
+            "t": "",
+            "ex": "I would love to be an actor.\n(Aktyor bo'lishni istardim.)"
+        },
+        {
+            "e": "Inactive",
+            "u": "kamharakat",
+            "t": "",
+            "ex": "I've been a bit inactive since I got a job in an office.\n(Offisga ishga kirganimdan beri, biroz kamharakat bo'lib qolganman.)"
+        },
+        {
+            "e": "Athlete",
+            "u": "atlet, sportchi",
+            "t": "",
+            "ex": "The athletes are training hard for the Olympics.\n(Sportchilar Olimpiada o'yinlari uchun qattiq shug'ullanishyapti.)"
+        },
+        {
+            "e": "Athletic",
+            "u": "jismonan baquvvat, sport formasida",
+            "t": "",
+            "ex": "You need to be very athletic to play volleyball.\n(Volleybol o'ynash uchun jismonan baquvvat bo'lishingiz kerak.)"
+        },
+        {
+            "e": "Athletics",
+            "u": "yugurish kabi sport o'yinlari",
+            "t": "",
+            "ex": "When we go to the Olympics, I want to see the athletics.\n(Olimpiada o'yinlariga borganimizda atletika musobaqalarini ko'rishni xohlayman.)"
+        },
+        {
+            "e": "Child",
+            "u": "bola",
+            "t": "",
+            "ex": "This cartoon is suitable for a 3-year-old child.\n(Bu multfilm 3 yoshli bolakay uchun mos.)"
+        },
+        {
+            "e": "Children",
+            "u": "bolalar",
+            "t": "",
+            "ex": "I watched some children playing in the playground.\n(Men bolalar maydonchasida o'ynayotgan bir nechta bolalarni tomosha qildim.)"
+        },
+        {
+            "e": "Childhood",
+            "u": "bolalik",
+            "t": "",
+            "ex": "My mum spent her childhood in France.\n(Oyim bolalik davrini Fransiyada o'tkazgan.)"
+        },
+        {
+            "e": "Collect",
+            "u": "yig'moq",
+            "t": "",
+            "ex": "He took up collecting coins in 1785.\n(U tangalar to'plashni 1785-yilda boshlagan.)"
+        },
+        {
+            "e": "Collection",
+            "u": "kolleksiya, to'plam",
+            "t": "",
+            "ex": "John has got a great collection of football shirts.\n(Jo'nning ajoyib futbol kiyimlari to'plami bor.)"
+        },
+        {
+            "e": "Collector",
+            "u": "kolleksioner, yig'uvchi",
+            "t": "",
+            "ex": "I sold my old stamps to a collector.\n(Eski markalarimni kolleksionerga sotib yubordim.)"
+        },
+        {
+            "e": "Entertain",
+            "u": "xursand qilmoq",
+            "t": "",
+            "ex": "She entertained us with stories of her travels.\n(U o'zining sayohatlari haqidagi hikoyalari bilan bizni xursand qildi.)"
+        },
+        {
+            "e": "Entertainment",
+            "u": "ko'ngilxushlik, ko'ngilchog'lik",
+            "t": "",
+            "ex": "There isn't much entertainment in the evenings in my town.\n(Mening shahrimda kechki payt ko'p o'yin-kulgi bo'lmaydi.)"
+        },
+        {
+            "e": "Hero",
+            "u": "qahramon",
+            "t": "",
+            "ex": "My granddad was a hero of the First World War.\n(Mening bobom Birinchi Jahon Urushi qahramoni bo'lgan.)"
+        },
+        {
+            "e": "Heroic",
+            "u": "qahramonlarga xos",
+            "t": "",
+            "ex": "The story was all about two heroic young men.\n(Hikoya ikki qahramon yigit haqida edi.)"
+        },
+        {
+            "e": "Heroine",
+            "u": "qahramon ayol",
+            "t": "",
+            "ex": "The heroine of the book finally gets married.\n(Kitobning qahramoni oxir-oqibat turmushga chiqadi.)"
+        },
+        {
+            "e": "Music",
+            "u": "musiqa",
+            "t": "",
+            "ex": "Every week they get together to make music.\n(Ular har hafta musiqa (yoki qo'shiq) kuylash uchun yig'ilishadi.)"
+        },
+        {
+            "e": "Musical",
+            "u": "musiqiy",
+            "t": "",
+            "ex": "Do you have much musical talent?\n(Sizda musiqiy iste'dod ko'pmi?)"
+        },
+        {
+            "e": "Musician",
+            "u": "musiqachi",
+            "t": "",
+            "ex": "It's not easy becoming a professional musician.\n(Prafessional musiqachi bo'lish oson emas.)"
+        },
+        {
+            "e": "Play",
+            "u": "o'ynamoq",
+            "t": "",
+            "ex": "There's a time to work and a time to play.\n(Ishlashni ham, o'ynashni ham o'z vaqti bor.)"
+        },
+        {
+            "e": "Player",
+            "u": "o'yinchi",
+            "t": "",
+            "ex": "One of the players was injured when he scored a goal.\n(U go'l urganida, o'yinchilardan biri jarohatlangan edi.)"
+        },
+        {
+            "e": "Playful",
+            "u": "o'yinqaroq, sho'x",
+            "t": "",
+            "ex": "My baby brother is very playful.\n(Mening ukam juda o'yinqaroq.)"
+        },
+        {
+            "e": "Sail",
+            "u": "suzmoq",
+            "t": "",
+            "ex": "The ferry sails from Newhaven to Dieppe.\n(Sol (eshkakli qayiq) Nyuhavendan Diepga suzadi.)"
+        },
+        {
+            "e": "Sailing",
+            "u": "suzish, dengiz safari",
+            "t": "",
+            "ex": "I love sailing and I try to go every summer.\n(Men (qayiqda) suzishni yoqtiraman va har yozda suzishga harakat qilaman.)"
+        },
+        {
+            "e": "Sailor",
+            "u": "dengizchi",
+            "t": "",
+            "ex": "A sailor helped us put our bags onto the ship.\n(Bir dengizchi sumkalarimizni kemaga olib chiqishga yordam berdi.)"
+        },
+        {
+            "e": "Sing",
+            "u": "kuylamoq",
+            "t": "",
+            "ex": "She usually sings in the shower.\n(U odatda dush qabul qilayotganda kuylaydi.)"
+        },
+        {
+            "e": "Sang",
+            "u": "sing fe'lining o'tgan zamon shakli",
+            "t": "",
+            "ex": "I sang in the choir when I was young.\n(Yoshligimda xo'rda kuylaganman.)"
+        },
+        {
+            "e": "Sung",
+            "u": "sing fe'lining past participle shakli",
+            "t": "",
+            "ex": "When my dad was at school, they had a song which was sung every morning.\n(Dadamning maktab chog'larida, har tongda kuylanadigan qo'shiq bo'lar edi.)"
+        },
+        {
+            "e": "Song",
+            "u": "qo'shiq",
+            "t": "",
+            "ex": "What's the name of that song you're singing?\n(Kuylayotgan qo'shig'ingizning nomi nima?)"
+        },
+        {
+            "e": "Singer",
+            "u": "qo'shiqchi",
+            "t": "",
+            "ex": "Kylie Minogue is one my favourite singers.\n(Kayli Minog mening sevimli qo'shiqchilarimdan biri.)"
+        },
+        {
+            "e": "Singing",
+            "u": "kuylash",
+            "t": "",
+            "ex": "I love Katy's singing–she's got a good voice.\n(Katining kuylashi menga yoqadi–uning yaxshi ovozi bor.)"
+        }
+    ],
+    "patterns": [
+        {
+            "e": "Bored with",
+            "u": "...dan zerikkan",
+            "t": "",
+            "ex": "I'm bored with watching this film.\n(Bu kinoni ko'rishdan zerikdim.)"
+        },
+        {
+            "e": "Crazy about",
+            "u": "...ning ashaddiy muhlisi",
+            "t": "",
+            "ex": "Marshall is crazy about video games.\n(Marshal video o'yinlarining ashaddiy muhlisi (judayam yaxshi ko'radi).)"
+        },
+        {
+            "e": "Good at",
+            "u": "...da yaxshi",
+            "t": "",
+            "ex": "What sports are you good at?\n(Qanday sportlarda yaxshisiz?)"
+        },
+        {
+            "e": "Interested in",
+            "u": "...ga qiziqqan",
+            "t": "",
+            "ex": "I'm quite interested in history.\n(Men tarixga juda qiziqaman.)"
+        },
+        {
+            "e": "Keen on",
+            "u": "...ga qiziqqan",
+            "t": "",
+            "ex": "I'm not very keen on spicy food.\n(Men achchiq ziravorli ovqatlarga unchalik qiziqmayman (unchalik yoqmaydi).)"
+        },
+        {
+            "e": "Popular with",
+            "u": "...orasida mashhur",
+            "t": "",
+            "ex": "This band is very popular with teenagers.\n(Ushbu musiqiy guruh o'smirlar orasida juda mashhur.)"
+        },
+        {
+            "e": "Feel like",
+            "u": "xohlamoq",
+            "t": "",
+            "ex": "What do you feel like doing this weekend?\n(Bu dam olish kunida nima qilishni xohlaysiz?)"
+        },
+        {
+            "e": "Listen to",
+            "u": "tinglamoq",
+            "t": "",
+            "ex": "In my free time, I like to listen to music.\n(Bo'sh vaqtimda musiqa tinglashni yoqtiraman.)"
+        },
+        {
+            "e": "Take part in",
+            "u": "qatnashmoq",
+            "t": "",
+            "ex": "Have you ever taken part in a talent contest?\n(Hech talantlar musobaqasida qatnashib ko'rganmisiz?)"
+        },
+        {
+            "e": "A book (by sb) about",
+            "u": "...haqida kitob",
+            "t": "",
+            "ex": "I read a great book by an English writer about travelling around Europe.\n(Men ingliz yozuvchisi tomonidan yozilgan Yevropa bo'ylab sayohat qilish to'g'risidagi kitobni o'qidim.)"
+        },
+        {
+            "e": "A fan of",
+            "u": "...ning muhlisi",
+            "t": "",
+            "ex": "If you're a fan of Tony DeVito, you'll love his latest album.\n(Agar siz Tony DeVitoning muhlisi bo'lsangiz, uning eng so'nggi albo'mi sizga yoqadi.)"
+        },
+        {
+            "e": "A game against",
+            "u": "...ga qarshi o'yin",
+            "t": "",
+            "ex": "In a game against a local school I scored four goals.\n(Mahalliy maktabga qarshi kechgan o'yinda men 4 ta go'l urdim.)"
+        }
+    ]
+};
+    window.isUserEdition = true;
+</script>
+
+<script>
+    const categoryNames = {
+        topic: "Topic Vocabularies",
+        phrasal: "Phrasal Verbs",
+        prepositional: "Prepositional Phrases",
+        formation: "Word Formation",
+        patterns: "Word Patterns"
+    };
+
+    const STORAGE_KEY = 'lex_gold_5cats_v3';
+    const BASKET_KEY = 'lex_gold_5cats_basket_v3';
+
+    // Load from localStorage only if this is not a pre-packaged student edition
+    let savedStore = localStorage.getItem(STORAGE_KEY);
+    if (savedStore && !window.isUserEdition) {
+        try {
+            let parsed = JSON.parse(savedStore);
+            vocabStore = { ...vocabStore, ...parsed };
+        } catch(e) { console.error("Storage parse error:", e); }
+    }
+
+    function applyThemeUI() {
+        const isLight = document.body.classList.contains('light-mode');
+        const label = isLight ? '🌙 DARK' : '☀️ LIGHT';
+        document.getElementById('themeBtn1').innerText = label;
+        document.getElementById('themeBtn2').innerText = label;
+    }
+
+    if (localStorage.getItem('lex_gold_theme') === 'light') {
+        document.body.classList.add('light-mode');
+    }
+    applyThemeUI();
+
+    let currentCategory = 'topic';
+    let targetImportCategory = 'topic';
+    let currentVocab = [];
+    let basket = [];
+    try {
+        basket = JSON.parse(localStorage.getItem(BASKET_KEY)) || [];
+    } catch(e) { basket = []; }
+
+    let isBasket = false, currentIdx = 0, direction = 'eng-uz', timer = 0, isShuffle = false;
+
+    setInterval(() => { 
+        timer++; 
+        let m = Math.floor(timer/60).toString().padStart(2,'0'), 
+            s = (timer%60).toString().padStart(2,'0'); 
+        document.getElementById('timer').innerText = `${m}:${s}`; 
+    }, 1000);
+
+    function toggleTheme() { 
+        document.body.classList.toggle('light-mode'); 
+        localStorage.setItem('lex_gold_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+        applyThemeUI();
+    }
+
+    function updateMenuBadges() {
+        Object.keys(categoryNames).forEach(cat => {
+            const el = document.getElementById(`m-cnt-${cat}`);
+            if (el) el.innerText = `${vocabStore[cat].length} items`;
+        });
+    }
+    updateMenuBadges();
+
+    // --- NAVIGATION BETWEEN PAGES ---
+    function openCategory(cat) {
+        if (vocabStore[cat].length === 0) {
+            alert(`Iltimos, avval "${categoryNames[cat]}" bo'limiga 📁 tugmasini bosib CSV yuklang!`);
+            return;
+        }
+        currentCategory = cat;
+        isBasket = false;
+        updateBasketButtonUI();
+        document.getElementById('basketLabel').innerText = "BASKET MODE";
+        document.getElementById('statusLabel').innerText = categoryNames[cat].toUpperCase();
+
+        document.getElementById('pageMenu').classList.remove('active');
+        document.getElementById('pageGame').classList.add('active');
+
+        document.getElementById('cardContainer').classList.remove('flipped');
+        setOrder(isShuffle ? 'shuffle' : 'linear');
+    }
+
+    function goToMenu() {
+        window.speechSynthesis.cancel();
+        isBasket = false;
+        document.getElementById('basketLabel').innerText = "BASKET MODE";
+        document.getElementById('pageGame').classList.remove('active');
+        document.getElementById('pageMenu').classList.add('active');
+        updateMenuBadges();
+    }
+
+    // --- IMPORT & RESET SYSTEM ---
+    function triggerImport(cat) {
+        targetImportCategory = cat;
+        const inp = document.getElementById('globalCsvInput');
+        if (inp) inp.click();
+    }
+
+    function clearAllData() {
+        if (confirm("Barcha yuklangan so'zlar va savatdagi ma'lumotlarni o'chirmoqchimisiz?")) {
+            vocabStore = { topic: [], phrasal: [], prepositional: [], formation: [], patterns: [] };
+            basket = [];
+            localStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem(BASKET_KEY);
+            updateMenuBadges();
+            document.getElementById('basketCount').innerText = "0";
+            alert("Barcha ma'lumotlar tozalandi.");
+        }
+    }
+
+    function processImport(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const text = e.target.result;
+            const importedData = [];
+            
+            const parseCSV = (str) => {
+                const arr = [];
+                let quote = false, col = '', row = [];
+                for (let i = 0; i < str.length; i++) {
+                    let char = str[i], next = str[i+1];
+                    if (char === '"' && quote && next === '"') { col += '"'; i++; continue; } 
+                    if (char === '"') { quote = !quote; continue; }
+                    if (char === ',' && !quote) { row.push(col.trim()); col = ''; continue; }
+                    if ((char === '\n' || char === '\r') && !quote) {
+                        if (char === '\r' && next === '\n') { i++; }
+                        row.push(col.trim());
+                        if (row.length > 1 || row[0] !== "") arr.push(row);
+                        row = []; col = ''; continue;
+                    }
+                    col += char;
+                }
+                if (col || row.length) { row.push(col.trim()); if (row.length > 1 || row[0] !== "") arr.push(row); }
+                return arr;
+            };
+
+            const allRows = parseCSV(text);
+            if (allRows.length <= 1) {
+                alert("Xatolik: CSV fayl bo'sh yoki noto'g'ri formatda!");
+                input.value = '';
+                return;
+            }
+            
+            const header = allRows[0].map(h => h.toLowerCase().replace(/[^a-z]/g, ''));
+            const hasNoCol = (header[0] === 'no' || header[0] === 'id' || !isNaN(parseInt(allRows[0][0])));
+            const dataRows = allRows.slice(1); 
+
+            dataRows.forEach((cols) => {
+                if (hasNoCol && cols.length >= 4 && cols[1]) {
+                    let exStr = cols[4] || "";
+                    if (cols[5]) exStr += "\n(" + cols[5] + ")";
+                    importedData.push({ e: cols[1], t: cols[2] || "", u: cols[3] || "", ex: exStr });
+                } else if (!hasNoCol && cols.length >= 2 && cols[0]) {
+                    importedData.push({ e: cols[0], u: cols[1] || "", t: cols[2] || "", ex: cols[4] || cols[3] || "" });
+                }
+            });
+
+            if (importedData.length > 0) {
+                vocabStore[targetImportCategory] = importedData;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(vocabStore));
+                updateMenuBadges();
+                alert(`[${categoryNames[targetImportCategory]}] bo'limiga ${importedData.length} ta so'z muvaffaqiyatli yuklandi!`);
+            } else {
+                alert("Mos keladigan so'zlar topilmadi. CSV formatini tekshiring.");
+            }
+            input.value = '';
+        };
+        reader.readAsText(file, 'UTF-8');
+    }
+
+    // --- GAMEPLAY & SWIPE LOGIC ---
+    let touchStartX = 0; 
+    let touchStartY = 0;
+    let isSwiping = false;
+    const swipeCard = document.getElementById('swipeCard');
+
+    swipeCard.addEventListener('touchstart', e => { 
+        touchStartX = e.changedTouches[0].screenX; 
+        touchStartY = e.changedTouches[0].screenY;
+        isSwiping = false;
+    }, {passive: true});
+
+    swipeCard.addEventListener('touchmove', e => {
+        if (Math.abs(e.changedTouches[0].screenX - touchStartX) > 15) {
+            isSwiping = true;
+        }
+    }, {passive: true});
+
+    swipeCard.addEventListener('touchend', e => { 
+        const diffX = touchStartX - e.changedTouches[0].screenX;
+        const diffY = Math.abs(touchStartY - e.changedTouches[0].screenY);
+        if (Math.abs(diffX) > 50 && Math.abs(diffX) > diffY) {
+            animateSwipe(diffX > 0 ? 'next' : 'prev');
+        }
+    }, {passive: true});
+
+    swipeCard.addEventListener('click', () => { 
+        if (isSwiping) { isSwiping = false; return; }
+        if ((isBasket ? basket : currentVocab).length > 0) {
+            document.getElementById('cardContainer').classList.toggle('flipped'); 
+        }
+    });
+
+    function animateSwipe(dir) {
+        const list = isBasket ? basket : currentVocab;
+        if (list.length <= 1) return;
+
+        swipeCard.style.transition = 'transform 0.22s ease, opacity 0.22s ease';
+        swipeCard.style.opacity = '0';
+        swipeCard.style.transform = `translateX(${dir === 'next' ? '-45px' : '45px'})`;
+        
+        setTimeout(() => {
+            manualMove(dir);
+            swipeCard.style.transition = 'none';
+            swipeCard.style.transform = `translateX(${dir === 'next' ? '45px' : '-45px'})`;
+            setTimeout(() => {
+                swipeCard.style.transition = 'transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.25s ease';
+                swipeCard.style.opacity = '1';
+                swipeCard.style.transform = 'translateX(0)';
+            }, 30);
+        }, 180);
+    }
+
+    function setOrder(type) {
+        isShuffle = (type === 'shuffle');
+        document.getElementById('orderLinear').classList.toggle('active', !isShuffle);
+        document.getElementById('orderShuffle').classList.toggle('active', isShuffle);
+        const baseList = vocabStore[currentCategory] || [];
+        currentVocab = isShuffle ? [...baseList].sort(() => Math.random() - 0.5) : [...baseList];
+        currentIdx = 0; 
+        update();
+    }
+
+    function manualMove(dir) {
+        document.getElementById('cardContainer').classList.remove('flipped');
+        const list = isBasket ? basket : currentVocab;
+        if (list.length === 0) return;
+
+        if (dir === 'next') currentIdx = (currentIdx + 1) % list.length;
+        else currentIdx = (currentIdx - 1 + list.length) % list.length;
+        update();
+    }
+
+    function renderExample(exText) {
+        if (!exText || exText.trim() === "") return { html: "", show: false };
+        let lines = exText.split('\n').map(l => l.trim()).filter(l => l !== "");
+        let html = "";
+        
+        lines.forEach(line => {
+            if (line.startsWith('(') && line.endsWith(')')) {
+                html += `<div class="example-uz">${line}</div>`;
+            } else {
+                html += `<div class="example-en">${line}</div>`;
+            }
+        });
+        return { html: html, show: true };
+    }
+
+    function update() {
+        const list = isBasket ? basket : currentVocab;
+        document.getElementById('basketCount').innerText = basket.length;
+        document.getElementById('progress').innerText = list.length > 0 ? `${currentIdx + 1} / ${list.length}` : "0 / 0";
+        
+        const pct = list.length > 0 ? ((currentIdx + 1) / list.length) * 100 : 0;
+        document.getElementById('progressFill').style.width = `${pct}%`;
+
+        const fT = document.getElementById('fText'), bT = document.getElementById('bText');
+        const fTr = document.getElementById('fTrans'), bTr = document.getElementById('bTrans');
+        const bEx = document.getElementById('bEx');
+        const fSp = document.getElementById('fSpeaker'), bSp = document.getElementById('bSpeaker');
+        
+        fSp.classList.remove('show-element'); bSp.classList.remove('show-element');
+        fTr.innerText = ""; bTr.innerText = ""; bEx.innerHTML = ""; bEx.style.display = "none";
+
+        if(list.length === 0) { 
+            fT.innerText = "NO WORDS"; 
+            fTr.innerText = "Please import CSV"; 
+            bT.innerText = "EMPTY"; 
+            return; 
+        }
+
+        const item = list[currentIdx];
+        let exObj = renderExample(item.ex);
+
+        switch(direction) {
+            case 'eng-uz':
+                fT.innerText = item.e; 
+                fTr.innerText = item.t; 
+                fSp.classList.add('show-element');
+                bT.innerText = item.u; 
+                if(exObj.show) { bEx.innerHTML = exObj.html; bEx.style.display = "block"; }
+                break;
+            case 'uz-eng':
+                fT.innerText = item.u; 
+                bT.innerText = item.e; 
+                bTr.innerText = item.t; 
+                if(exObj.show) { bEx.innerHTML = exObj.html; bEx.style.display = "block"; } 
+                bSp.classList.add('show-element'); 
+                break;
+        }
+        updateBasketButtonUI();
+    }
+
+    function setDirection(d, btn) {
+        direction = d; 
+        document.querySelectorAll('.dir-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active'); 
+        document.getElementById('cardContainer').classList.remove('flipped');
+        update();
+    }
+
+    function updateBasketButtonUI() {
+        const btn = document.getElementById('addBtn');
+        if (isBasket) {
+            btn.innerText = "✓ LEARNED (REMOVE FROM BASKET)";
+            btn.classList.add('remove-mode');
+        } else {
+            const item = currentVocab[currentIdx];
+            const alreadyIn = item && basket.some(x => x.e === item.e);
+            btn.innerText = alreadyIn ? "★ IN BASKET" : "+ ADD TO BASKET";
+            btn.classList.remove('remove-mode');
+        }
+    }
+
+    function handleBasketAction() {
+        if (isBasket) {
+            if (basket.length === 0) return;
+            basket.splice(currentIdx, 1);
+            localStorage.setItem(BASKET_KEY, JSON.stringify(basket));
+            document.getElementById('cardContainer').classList.remove('flipped');
+            if (basket.length === 0) {
+                toggleBasketMode();
+                return;
+            }
+            if (currentIdx >= basket.length) currentIdx = 0;
+            update();
+        } else {
+            if (currentVocab.length === 0) return;
+            const item = currentVocab[currentIdx];
+            if (item && !basket.some(x => x.e === item.e)) {
+                basket.push(item); 
+                localStorage.setItem(BASKET_KEY, JSON.stringify(basket));
+                document.getElementById('basketCount').innerText = basket.length;
+                let b = document.getElementById('addBtn'); 
+                b.innerText = "SAVED!"; 
+                setTimeout(() => updateBasketButtonUI(), 700);
+            }
+        }
+    }
+
+    function toggleBasketMode() {
+        if (!isBasket && basket.length === 0) { alert("Basket is empty!"); return; }
+        isBasket = !isBasket; 
+        currentIdx = 0;
+        document.getElementById('basketLabel').innerText = isBasket ? "EXIT BASKET" : "BASKET MODE";
+        document.getElementById('statusLabel').innerText = isBasket ? "BASKET MODE" : categoryNames[currentCategory].toUpperCase();
+        document.getElementById('cardContainer').classList.remove('flipped');
+        update();
+    }
+
+    function speak() {
+        const list = isBasket ? basket : currentVocab;
+        if(!list[currentIdx]) return;
+        window.speechSynthesis.cancel();
+        // Clean parenthetical notes like "(sth)" or "(sb)" for natural TTS pronunciation
+        const cleanText = list[currentIdx].e.replace(/\(.*?\)/g, '').replace(/\//g, ', ').trim();
+        const ut = new SpeechSynthesisUtterance(cleanText);
+        ut.lang = 'en-US'; 
+        ut.rate = 0.88; 
+        window.speechSynthesis.speak(ut);
+    }
+
+    // --- KEYBOARD SHORTCUTS FOR DESKTOP ---
+    document.addEventListener('keydown', (e) => {
+        if (!document.getElementById('pageGame').classList.contains('active')) return;
+        if (e.code === 'Space' || e.code === 'Enter') {
+            e.preventDefault();
+            if ((isBasket ? basket : currentVocab).length > 0) {
+                document.getElementById('cardContainer').classList.toggle('flipped');
+            }
+        } else if (e.code === 'ArrowRight') {
+            animateSwipe('next');
+        } else if (e.code === 'ArrowLeft') {
+            animateSwipe('prev');
+        } else if (e.code === 'KeyS') {
+            speak();
+        } else if (e.code === 'KeyB') {
+            handleBasketAction();
+        }
+    });
+
+    // --- SAFE STANDALONE EXPORT ---
+    function downloadPage() {
+        const totalWords = Object.values(vocabStore).reduce((acc, arr) => acc + arr.length, 0);
+        if(totalWords === 0) { alert("Iltimos, avval kamida bitta bo'limga CSV yuklang!"); return; }
+        
+        let fileName = prompt("Fayl nomini kiriting:", "Quiz_Card_B1");
+        if (fileName === null) return;
+        fileName = fileName.trim() || "Quiz_Card_B1";
+        if (!fileName.endsWith('.html')) fileName += '.html';
+
+        let docClone = document.documentElement.cloneNode(true);
+        
+        // Remove all admin/import controls from the exported student file
+        const globalInput = docClone.querySelector('#globalCsvInput');
+        const adminActions = docClone.querySelector('#adminActions');
+        const miniImportBtns = docClone.querySelectorAll('.import-mini-btn');
+        
+        if (globalInput) globalInput.remove();
+        if (adminActions) adminActions.remove();
+        miniImportBtns.forEach(btn => btn.remove());
+
+        // Reset runtime state in cloned DOM so it opens cleanly on Menu page
+        docClone.querySelector('#pageMenu').classList.add('active');
+        docClone.querySelector('#pageGame').classList.remove('active');
+        docClone.querySelector('#cardContainer').classList.remove('flipped');
+
+        // Safely inject vocabulary JSON directly into the script node
+        const vocabScript = docClone.querySelector('#vocabData');
+        vocabScript.textContent = `\n    let vocabStore = ${JSON.stringify(vocabStore, null, 4)};\n    window.isUserEdition = true;\n`;
+        
+        const finalHtml = "<!DOCTYPE html>\n" + docClone.outerHTML;
+        const blob = new Blob([finalHtml], { type: 'text/html;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+    }
+</script>
+
+<webhighlights-element-registry data-wh-world="57134gcu" elements-count="67"></webhighlights-element-registry><div id="webhighlights-notificationshldjnlbobkdkghfidgoecgmklcemanhm"></div><style id="web-highlights-global-style-variables">:root { --wh-slate-50: #f8fafc;--wh-slate-100: #f1f5f9;--wh-slate-200: #e2e8f0;--wh-slate-300: #cbd5e1;--wh-slate-400: #94a3b8;--wh-slate-500: #64748b;--wh-slate-600: #475569;--wh-slate-700: #334155;--wh-slate-800: #1e293b;--wh-slate-900: #0f172a;--wh-slate-950: #020617;--wh-primary-50: rgb(188, 220, 205);--wh-primary-100: rgb(154, 208, 185);--wh-primary-200: rgb(120, 197, 164);--wh-primary-300: rgb(86, 186, 144);--wh-primary-400: rgb(53, 176, 125);--wh-primary-500: rgb(0, 179, 122);--wh-primary-600: hsl(161, 100%, 33%);--wh-primary-700: hsl(161, 100%, 31%);--wh-primary-800: hsl(161, 100%, 29%);--wh-primary-900: hsl(161, 100%, 25%);--wh-primary-950: hsl(161, 100%, 20%);--wh-secondary-50: hsl(218, 22%, 27%);--wh-secondary-100: hsl(218, 22%, 23%);--wh-secondary-200: hsl(218, 22%, 22%);--wh-secondary-300: hsl(218, 22%, 19%);--wh-secondary-400: hsl(218, 22%, 17%);--wh-secondary-500: hsl(218, 22%, 15%);--wh-secondary-600: hsl(218, 22%, 13%);--wh-secondary-700: hsl(218, 22%, 11%);--wh-secondary-800: hsl(218, 22%, 9%);--wh-secondary-900: hsl(218, 22%, 5%);--wh-secondary-950: hsl(218, 22%, 3%);--wh-gray-50: #f9fafb;--wh-gray-100: #f3f4f6;--wh-gray-200: #e5e7eb;--wh-gray-300: #d1d5db;--wh-gray-400: #9ca3af;--wh-gray-500: #6b7280;--wh-gray-600: #4b5563;--wh-gray-700: #374151;--wh-gray-800: #1f2937;--wh-gray-900: #111827;--wh-gray-950: #030712;--wh-zinc-50: #fafafa;--wh-zinc-100: #f4f4f5;--wh-zinc-200: #e4e4e7;--wh-zinc-300: #d4d4d8;--wh-zinc-400: #a1a1aa;--wh-zinc-500: #71717a;--wh-zinc-600: #52525b;--wh-zinc-700: #3f3f46;--wh-zinc-800: #27272a;--wh-zinc-900: #18181b;--wh-zinc-950: #09090b;--wh-neutral-50: #fafafa;--wh-neutral-100: #f5f5f5;--wh-neutral-200: #e5e5e5;--wh-neutral-300: #d4d4d4;--wh-neutral-400: #a3a3a3;--wh-neutral-500: #737373;--wh-neutral-600: #525252;--wh-neutral-700: #404040;--wh-neutral-800: #262626;--wh-neutral-900: #171717;--wh-neutral-950: #0a0a0a;--wh-stone-50: #fafaf9;--wh-stone-100: #f5f5f4;--wh-stone-200: #e7e5e4;--wh-stone-300: #d6d3d1;--wh-stone-400: #a8a29e;--wh-stone-500: #78716c;--wh-stone-600: #57534e;--wh-stone-700: #44403c;--wh-stone-800: #292524;--wh-stone-900: #1c1917;--wh-stone-950: #0c0a09;--wh-red-50: #fef2f2;--wh-red-100: #fee2e2;--wh-red-200: #fecaca;--wh-red-300: #fca5a5;--wh-red-400: #f87171;--wh-red-500: #ef4444;--wh-red-600: #dc2626;--wh-red-700: #b91c1c;--wh-red-800: #991b1b;--wh-red-900: #7f1d1d;--wh-red-950: #450a0a;--wh-orange-50: #fff7ed;--wh-orange-100: #ffedd5;--wh-orange-200: #fed7aa;--wh-orange-300: #fdba74;--wh-orange-400: #fb923c;--wh-orange-500: #f97316;--wh-orange-600: #ea580c;--wh-orange-700: #c2410c;--wh-orange-800: #9a3412;--wh-orange-900: #7c2d12;--wh-orange-950: #431407;--wh-amber-50: #fffbeb;--wh-amber-100: #fef3c7;--wh-amber-200: #fde68a;--wh-amber-300: #fcd34d;--wh-amber-400: #fbbf24;--wh-amber-500: #f59e0b;--wh-amber-600: #d97706;--wh-amber-700: #b45309;--wh-amber-800: #92400e;--wh-amber-900: #78350f;--wh-amber-950: #451a03;--wh-yellow-50: #fefce8;--wh-yellow-100: #fef9c3;--wh-yellow-200: #fef08a;--wh-yellow-300: #fde047;--wh-yellow-400: #facc15;--wh-yellow-500: #eab308;--wh-yellow-600: #ca8a04;--wh-yellow-700: #a16207;--wh-yellow-800: #854d0e;--wh-yellow-900: #713f12;--wh-yellow-950: #422006;--wh-lime-50: #f7fee7;--wh-lime-100: #ecfccb;--wh-lime-200: #d9f99d;--wh-lime-300: #bef264;--wh-lime-400: #a3e635;--wh-lime-500: #84cc16;--wh-lime-600: #65a30d;--wh-lime-700: #4d7c0f;--wh-lime-800: #3f6212;--wh-lime-900: #365314;--wh-lime-950: #1a2e05;--wh-green-50: #f0fdf4;--wh-green-100: #dcfce7;--wh-green-200: #bbf7d0;--wh-green-300: #86efac;--wh-green-400: #4ade80;--wh-green-500: #22c55e;--wh-green-600: #16a34a;--wh-green-700: #15803d;--wh-green-800: #166534;--wh-green-900: #14532d;--wh-green-950: #052e16;--wh-emerald-50: #ecfdf5;--wh-emerald-100: #d1fae5;--wh-emerald-200: #a7f3d0;--wh-emerald-300: #6ee7b7;--wh-emerald-400: #34d399;--wh-emerald-500: #10b981;--wh-emerald-600: #059669;--wh-emerald-700: #047857;--wh-emerald-800: #065f46;--wh-emerald-900: #064e3b;--wh-emerald-950: #022c22;--wh-teal-50: #f0fdfa;--wh-teal-100: #ccfbf1;--wh-teal-200: #99f6e4;--wh-teal-300: #5eead4;--wh-teal-400: #2dd4bf;--wh-teal-500: #14b8a6;--wh-teal-600: #0d9488;--wh-teal-700: #0f766e;--wh-teal-800: #115e59;--wh-teal-900: #134e4a;--wh-teal-950: #042f2e;--wh-cyan-50: #ecfeff;--wh-cyan-100: #cffafe;--wh-cyan-200: #a5f3fc;--wh-cyan-300: #67e8f9;--wh-cyan-400: #22d3ee;--wh-cyan-500: #06b6d4;--wh-cyan-600: #0891b2;--wh-cyan-700: #0e7490;--wh-cyan-800: #155e75;--wh-cyan-900: #164e63;--wh-cyan-950: #083344;--wh-sky-50: #f0f9ff;--wh-sky-100: #e0f2fe;--wh-sky-200: #bae6fd;--wh-sky-300: #7dd3fc;--wh-sky-400: #38bdf8;--wh-sky-500: #0ea5e9;--wh-sky-600: #0284c7;--wh-sky-700: #0369a1;--wh-sky-800: #075985;--wh-sky-900: #0c4a6e;--wh-sky-950: #082f49;--wh-blue-50: #eff6ff;--wh-blue-100: #dbeafe;--wh-blue-200: #bfdbfe;--wh-blue-300: #93c5fd;--wh-blue-400: #60a5fa;--wh-blue-500: #3b82f6;--wh-blue-600: #2563eb;--wh-blue-700: #1d4ed8;--wh-blue-800: #1e40af;--wh-blue-900: #1e3a8a;--wh-blue-950: #172554;--wh-indigo-50: #eef2ff;--wh-indigo-100: #e0e7ff;--wh-indigo-200: #c7d2fe;--wh-indigo-300: #a5b4fc;--wh-indigo-400: #818cf8;--wh-indigo-500: #6366f1;--wh-indigo-600: #4f46e5;--wh-indigo-700: #4338ca;--wh-indigo-800: #3730a3;--wh-indigo-900: #312e81;--wh-indigo-950: #1e1b4b;--wh-violet-50: #f5f3ff;--wh-violet-100: #ede9fe;--wh-violet-200: #ddd6fe;--wh-violet-300: #c4b5fd;--wh-violet-400: #a78bfa;--wh-violet-500: #8b5cf6;--wh-violet-600: #7c3aed;--wh-violet-700: #6d28d9;--wh-violet-800: #5b21b6;--wh-violet-900: #4c1d95;--wh-violet-950: #2e1065;--wh-purple-50: #faf5ff;--wh-purple-100: #f3e8ff;--wh-purple-200: #e9d5ff;--wh-purple-300: #d8b4fe;--wh-purple-400: #c084fc;--wh-purple-500: #a855f7;--wh-purple-600: #9333ea;--wh-purple-700: #7e22ce;--wh-purple-800: #6b21a8;--wh-purple-900: #581c87;--wh-purple-950: #3b0764;--wh-fuchsia-50: #fdf4ff;--wh-fuchsia-100: #fae8ff;--wh-fuchsia-200: #f5d0fe;--wh-fuchsia-300: #f0abfc;--wh-fuchsia-400: #e879f9;--wh-fuchsia-500: #d946ef;--wh-fuchsia-600: #c026d3;--wh-fuchsia-700: #a21caf;--wh-fuchsia-800: #86198f;--wh-fuchsia-900: #701a75;--wh-fuchsia-950: #4a044e;--wh-pink-50: #fdf2f8;--wh-pink-100: #fce7f3;--wh-pink-200: #fbcfe8;--wh-pink-300: #f9a8d4;--wh-pink-400: #f472b6;--wh-pink-500: #ec4899;--wh-pink-600: #db2777;--wh-pink-700: #be185d;--wh-pink-800: #9d174d;--wh-pink-900: #831843;--wh-pink-950: #500724;--wh-rose-50: #fff1f2;--wh-rose-100: #ffe4e6;--wh-rose-200: #fecdd3;--wh-rose-300: #fda4af;--wh-rose-400: #fb7185;--wh-rose-500: #f43f5e;--wh-rose-600: #e11d48;--wh-rose-700: #be123c;--wh-rose-800: #9f1239;--wh-rose-900: #881337;--wh-rose-950: #4c0519;--wh-primary-color: var(--wh-primary-500);--wh-primary-color-hover: #00a16e;--wh-primary-color-transparent: #00aa7424;--wh-primary-color-transparent-light: #00a8730f;--wh-primary-color-transparent-strong: #00a87340;--wh-primary-color-transparent-stronger: hsla(161, 100%, 33%, 0.5);--wh-primary-color-transparent-strongest: hsla(161, 100%, 33%, 0.75);--wh-primary-light: #53e3a6;--wh-primary-dark: #007f4b;--wh-primary-dark-hover: #017444;--wh-primary-shadow: #00b07841;--wh-primary-shadow-2: #00b07870;--wh-primary-border-color: #c8c8c870;--wh-warning-color: #ff5a1f;--wh-warning-color-light: #feecdc;--wh-ai-primary-decimal: 167, 139, 250;--wh-ai-secondary-decimal  : 147, 51, 234;--wh-ai-accent-decimal: 244, 114, 182;--wh-ai-primary: rgba(var(--wh-ai-primary-decimal), 1);--wh-ai-secondary: rgba(var(--wh-ai-secondary-decimal), 1);--wh-ai-accent: rgba(var(--wh-ai-accent-decimal), 1);--secondary-color: #3d4455;--secondary-color-hover: #3a4052;--secondary-color-transparent: #3d44556b;--secondary-light: #4c556d;--secondary-dark: #252934;--secondary-dark-hover: #191b22;--secondary-dark-transparent: #2e2d2d46;--highlight-color: #92ffaa;--error-color: #d62d4c;--error-color-light: #fde8e8;--error-info: #14854e;--success-color: #0e9f6e;--success-color-light: #def7ec;--font-color: #2f3237;--font-color-light: #626364;--font-color-dark: #252525;--wh-font-family: 'SF Pro Display', 'Inter', ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";--font-family: var(--wh-font-family);--wh-link-color: #1d9bf0;--wh-form-active-color: #3b82f6;--wh-accent-blue: #1f6feb;--BREAKPOINT_XS: 575px;--BREAKPOINT_S: 767px;--BREAKPOINT_M: 991px;--BREAKPOINT_L: 1199px;--BREAKPOINT_XL: 1399px;--BREAKPOINT_XXL: 1699px;--wh-danger-color: var(--wh-red-600);--wh-danger-color-hover: var(--wh-red-700);--wh-font-size: calc(13px * var(--wh-font-size-factor, 1));--wh-blockquote-line-height: 1.3;--wh-aurora-intensity: 0.7;--wh-aurora-image-intensity: 0.2;--wh-font-size-factor: 1;--wh-breakpoint-xs: 575px;--wh-breakpoint-s: 767px;--wh-breakpoint-m: 991px;--wh-breakpoint-l: 1199px;--wh-breakpoint-xl: 1399px;--wh-breakpoint-xxl: 1699px;--wh-font-size-2xs: calc(10px * var(--wh-font-size-factor, 1));--wh-font-size-xs: calc(11px * var(--wh-font-size-factor, 1));--wh-font-size-s: calc(12px * var(--wh-font-size-factor, 1));--wh-font-size-m: calc(13px * var(--wh-font-size-factor, 1));--wh-font-size-l: calc(14px * var(--wh-font-size-factor, 1));--wh-font-size-xl: calc(16px * var(--wh-font-size-factor, 1));--wh-font-size-2xl: calc(18px * var(--wh-font-size-factor, 1));--wh-font-size-3xl: calc(20px * var(--wh-font-size-factor, 1));--wh-font-size-4xl: calc(24px * var(--wh-font-size-factor, 1));--wh-font-size-5xl: calc(30px * var(--wh-font-size-factor, 1));--wh-font-size-6xl: calc(36px * var(--wh-font-size-factor, 1));--wh-spacing-2xs: 2px;--wh-spacing-xs: 4px;--wh-spacing-s: 8px;--wh-spacing-m: 12px;--wh-spacing-l: 16px;--wh-spacing-xl: 24px;--wh-spacing-2xl: 32px;--wh-spacing-3xl: 48px;--wh-spacing-4xl: 64px;--wh-spacing-5xl: 96px;--wh-border-radius-none: 0px;--wh-border-radius-xs: 2px;--wh-border-radius-s: 4px;--wh-border-radius-m: 6px;--wh-border-radius-l: 8px;--wh-border-radius-xl: 12px;--wh-border-radius-2xl: 16px;--wh-border-radius-3xl: 24px;--wh-border-radius-full: 9999px;--wh-font-weight-light: 300;--wh-font-weight-normal: 400;--wh-font-weight-medium: 500;--wh-font-weight-semibold: 600;--wh-font-weight-bold: 700;--wh-font-weight-extrabold: 800;--wh-line-height-tight: 1.25;--wh-line-height-snug: 1.375;--wh-line-height-normal: 1.5;--wh-line-height-relaxed: 1.625;--wh-line-height-loose: 2;--wh-error-text: var(--wh-red-400);--wh-bg-base: var(--wh-secondary-600);--wh-bg-base-hover: var(--wh-secondary-500);--wh-border-base: var(--wh-secondary-200);--wh-border-base-hover: var(--wh-secondary-100);--wh-border-base-strong: var(--wh-secondary-100);--wh-border-base-strong-hover: var(--wh-secondary-50);--wh-bg-base-hover-strong: var(--wh-secondary-300);--wh-bg-back: var(--wh-secondary-700);--wh-bg-back-strong: var(--wh-secondary-800);--wh-bg-back-strong-hover: var(--wh-secondary-900);--wh-bg-back-hover: var(--wh-secondary-600);--wh-bg-back-hover-strong: var(--wh-secondary-800);--wh-border-back: var(--wh-secondary-100);--wh-border-back-strong: var(--wh-secondary-50);--wh-deck-wash-strength: 0.6;--wh-bg-front: var(--wh-secondary-400);--wh-bg-front-strong: var(--wh-secondary-200);--wh-bg-front-strong-hover: var(--wh-secondary-50);--wh-bg-front-hover: var(--wh-secondary-300);--wh-bg-front-hover-strong: var(--wh-secondary-200);--wh-border-front: hsl(227, 20%, 25%);--wh-border-front-strong: hsl(227, 20%, 35%);--wh-border-front-hover: hsl(227, 20%, 55%);--wh-text-stronger: hsl(0, 0%, 95%);--wh-text-strongest: hsl(0, 0%, 100%);--wh-text-strong: hsl(0, 0%, 90%);--wh-text: hsl(0, 0%, 85%);--wh-text-hover: var(--wh-text-strong);--wh-text-light: hsl(0, 0%, 82%);--wh-text-lighter: hsl(0, 0%, 72%);--wh-text-lightest: hsl(0, 0%, 62%);--wh-border-color: hsla(0, 0%, 100%, 0.15);--wh-border-color-strong: hsla(0, 0%, 100%, 0.25);--wh-note-editor-bg-color: hsl(221, 27%, 17%);--wh-note-editor-bg-color-preview: hsl(221, 27%, 15%);--wh-bg-tags: var(--wh-secondary-300);--wh-bg-tags-hover: var(--wh-secondary-200);--wh-syntax-bg-color: rgba(255, 255, 255, 0.05);--wh-fallback-img-color: var(--wh-secondary-600);--wh-bg-disabled: hsl(220, 22%, 18%);--wh-bg-notification-unread: hsla(161, 100%, 20%, 0.15);--wh-bg-notification-unread-hover: hsla(161, 100%, 20%, 0.05);--wh-subtle-gray: rgb(255, 255, 255, 0.1);--wh-shadow: inset 0 0 0.5px 1px hsla(0, 0%, 100%, 0.1),
+      /* 2. shadow ring 👇 */ 0 0 0 1px hsla(230, 13%, 9%, 0.075),
+      /* 3. multiple soft shadows 👇 */ 0 0.3px 0.4px hsla(230, 13%, 9%, 0.02),
+      0 0.9px 1.5px hsla(230, 13%, 9%, 0.045),
+      0 3.5px 6px hsla(230, 13%, 9%, 0.09);--wh-shadow-primary: var(--wh-primary-500) 0px 0px 0px 1px inset,
+      var(--wh-primary-500) 0px 0px 1px;--wh-skeleton-bg: var(--wh-secondary-300);--wh-skeleton-bg-hover: var(--wh-secondary-200);--wh-skeleton-bg-strong: var(--wh-secondary-200);--wh-skeleton-bg-strong-hover: var(--wh-secondary-100);--wh-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);--wh-shadow-s: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4);--wh-shadow-m: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);--wh-shadow-l: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);--wh-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);--wh-shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5);--wh-warning-bg: rgba(245, 158, 11, 0.08);--wh-warning-bg-hover: rgba(245, 158, 11, 0.10);--wh-warning-border: rgba(245, 158, 11, 0.2);--wh-warning-text: #f59e0b;--wh-aurora-scrim-mid: hsla(218, 22%, 14%, 0.5);--wh-aurora-scrim-strong: hsla(218, 22%, 14%, 0.86);--wh-aurora-scrim-full: hsla(218, 22%, 13%, 0.9);--wh-aurora-title: hsl(0, 0%, 100%);--wh-aurora-text: hsl(0, 0%, 87%);--wh-aurora-text-muted: hsl(218, 10%, 74%);--wh-aurora-tag-bg: hsla(0, 0%, 100%, 0.09);--wh-aurora-tag-bg-hover: hsla(0, 0%, 100%, 0.16);--wh-aurora-tag-border: hsla(0, 0%, 100%, 0.12);--wh-aurora-tag-text: hsl(0, 0%, 92%);--wh-aurora-divider: hsla(0, 0%, 100%, 0.14);--wh-apple-sign-in-bg: #fff;--wh-apple-sign-in-text: #000; }</style><style id="web-highlights-global-styles">
+  webhighlights-sidebar {
+    --wh-font-size: calc(13.5px * var(--wh-font-size-factor, 1));
+  }
+
+  body.web-highlights-animate {
+    transition: all 300ms linear;
+    transition-property: margin-left, margin-right;
+  }
+
+  body.web-highlights-open {
+    margin-left: 400px !important;
+  }
+
+  web-highlight.webhighlights-highlight {
+    background-color: #92ffaa;
+    cursor: pointer;
+    visibility: visible !important;
+  }
+
+  web-highlight.webhighlights-highlight.webhighlight-with-tags,
+  web-highlight.webhighlights-highlight.webhighlight-with-notes {
+    border-bottom: 2.8px solid gray;
+    border-radius: 0px;
+  }
+
+  web-highlight > *:not(webhighlights-popup-toolbox) {
+    background-color: #92ffaa;
+  }
+
+  webhighlights-popup-toolbox.contains-highlight {
+    transform: translate(-63px, -10px);
+    position: fixed;
+  }
+</style><webhighlights-popup-toolbox data-wh-world="57134gcu"></webhighlights-popup-toolbox><webhighlights-marker data-wh-world="57134gcu"></webhighlights-marker><div id="give-freely-root-hldjnlbobkdkghfidgoecgmklcemanhm" class="give-freely-root" data-extension-id="hldjnlbobkdkghfidgoecgmklcemanhm" data-extension-name="Web Highlights: PDF &amp; Web Highlighter + Notes &amp; AI Summary" style="display: block;"></div></body><webhighlights-sidebar data-wh-world="57134gcu" alignment="left" sidebar-width="400"></webhighlights-sidebar></html>
